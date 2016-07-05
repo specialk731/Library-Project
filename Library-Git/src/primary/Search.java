@@ -10,15 +10,20 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class Search extends JFrame {
 
 	private JPanel contentPane;
+	
+	private int Branch;
 
 	/**
 	 * Create the frame.
 	 */
-	public Search(JFrame frame1) {
+	public Search(JFrame frame1, int branch) {
+		
+		Branch = branch;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -39,6 +44,11 @@ public class Search extends JFrame {
 		JLabel lblSearch = new JLabel("Search");
 		lblSearch.setBounds(10, 11, 58, 24);
 		contentPane.add(lblSearch);
+		
+		JLabel lblNewLabel = new JLabel("Branch: " + Branch);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(10, 46, 102, 14);
+		contentPane.add(lblNewLabel);
 	}
 
 }

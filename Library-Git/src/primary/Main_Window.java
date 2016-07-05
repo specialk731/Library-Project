@@ -45,10 +45,15 @@ public class Main_Window {
 	public Main_Window() {
 		initialize();
 		try{
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "");
+			conn = DriverManager.getConnection("jdbc:mysql://10.10.10.124:3306/", "Kevin", "");
 			
 			if(conn.isValid(0))
-				JOptionPane.showMessageDialog(null, "Connected to the Database!");
+			{
+				JLabel lblNewLabel = new JLabel("Good");
+				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel.setBounds(355, 204, 69, 14);
+				frame.getContentPane().add(lblNewLabel);
+			}
 			
 			Statement stmt = conn.createStatement();
 			
@@ -99,9 +104,25 @@ public class Main_Window {
 		JButton TopRight = new JButton("Search");
 		TopRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Search sea = new Search(frame);
-				frame.setVisible(false);
-				sea.setVisible(true);
+				
+				try{
+				int Branch = Integer.parseInt(textField.getText());
+				
+				Statement stmt = conn.createStatement();
+				
+				if(Check_Branch(conn, stmt, Branch))
+						{
+						Search sea = new Search(frame, Branch);
+						frame.setVisible(false);
+						sea.setVisible(true);
+						}
+				else
+					JOptionPane.showMessageDialog(null, "Branch: " + Branch + " does not exist. Possible Branches: " + Get_Branches(conn,stmt));
+				}
+				catch(Exception e1)
+				{
+					JOptionPane.showMessageDialog(null, e);
+				}
 			}
 		});
 		TopRight.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -134,13 +155,47 @@ public class Main_Window {
 		
 		textField = new JTextField();
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setBounds(355, 181, 69, 20);
+		textField.setBounds(355, 137, 69, 20);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		
 		JLabel lblSetBranch = new JLabel("Set Branch:");
 		lblSetBranch.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSetBranch.setBounds(355, 156, 69, 14);
+		lblSetBranch.setBounds(355, 112, 69, 14);
 		frame.getContentPane().add(lblSetBranch);
+		
+		JLabel lblConnectionStatus = new JLabel("Connection:");
+		lblConnectionStatus.setHorizontalAlignment(SwingConstants.CENTER);
+		lblConnectionStatus.setBounds(355, 181, 69, 14);
+		frame.getContentPane().add(lblConnectionStatus);
+		
+	}
+	
+	static public boolean Check_Branch(Connection conn, Statement stmt, int Branch) throws SQLException
+	{
+		ResultSet rs1;
+		Boolean ret = false;
+		
+		rs1 = stmt.executeQuery("Select * FROM LIBRARY_BRANCH WHERE Branch_Id = " + Branch + ";");
+		ret = rs1.first();
+		rs1.close();
+		
+		return ret;
+	}
+	
+	static public String Get_Branches(Connection conn, Statement stmt) throws SQLException
+	{
+		ResultSet rs1;
+		String s1 = "";
+		
+		rs1 = stmt.executeQuery("SELECT Branch_Id FROM LIBRARY_BRANCH;");
+		
+		while(rs1.next())
+			if(s1 == "")
+				s1 = s1 + rs1.getString("Branch_Id");
+			else
+				s1 = s1 + ", " + rs1.getShort("Branch_Id");
+		
+		return s1;
 	}
 }
