@@ -47,6 +47,9 @@ public class Main_Window {
 		try{
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "");
 			
+			if(conn.isValid(0))
+				JOptionPane.showMessageDialog(null, "Connected to the Database!");
+			
 			Statement stmt = conn.createStatement();
 			
 			stmt.execute("USE LIBRARY");
