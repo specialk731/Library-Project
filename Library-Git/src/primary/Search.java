@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import java.sql.*;
+import java.awt.Font;
 
 public class Search extends JFrame {
 
@@ -28,7 +29,7 @@ public class Search extends JFrame {
 		
 		Branch = branch;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 1100, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -41,10 +42,12 @@ public class Search extends JFrame {
 				dispose();
 			}
 		});
-		Main_Menu.setBounds(309, 213, 115, 38);
+		Main_Menu.setBounds(959, 563, 115, 38);
 		contentPane.add(Main_Menu);
 		
 		JLabel lblSearch = new JLabel("Search");
+		lblSearch.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSearch.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblSearch.setBounds(10, 11, 58, 24);
 		contentPane.add(lblSearch);
 		

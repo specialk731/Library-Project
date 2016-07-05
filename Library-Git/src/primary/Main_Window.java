@@ -129,28 +129,13 @@ public class Main_Window {
 		TopRight.setBounds(200, 112, 145, 58);
 		frame.getContentPane().add(TopRight);
 		
-		JButton BottomRight = new JButton("Check Out/In");
+		JButton BottomRight = new JButton("Check In");
 		BottomRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				try{
-					int Branch = Integer.parseInt(textField.getText());
-					
-					Statement stmt = conn.createStatement();
-					
-					if(Check_Branch(conn, stmt, Branch))
-							{
-						Check_Out che = new Check_Out(frame, conn, Branch);
-						frame.setVisible(false);
-						che.setVisible(true);
-							}
-					else
-						JOptionPane.showMessageDialog(null, "Branch: " + Branch + " does not exist. Possible Branches: " + Get_Branches(conn,stmt));
-					}
-					catch(Exception e1)
-					{
-						JOptionPane.showMessageDialog(null, e1);
-					}
+				Check_Out che = new Check_Out(frame, conn);
+				frame.setVisible(false);
+				che.setVisible(true);
 				
 			}
 		});
