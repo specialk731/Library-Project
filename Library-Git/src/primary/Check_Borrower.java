@@ -65,7 +65,7 @@ public class Check_Borrower extends JFrame {
 		
 		JLabel lblSsn = new JLabel("SSN");
 		lblSsn.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSsn.setBounds(352, 24, 32, 14);
+		lblSsn.setBounds(464, 24, 32, 14);
 		contentPane.add(lblSsn);
 		
 		JLabel lblCardNumber = new JLabel("Card Number");
@@ -74,19 +74,21 @@ public class Check_Borrower extends JFrame {
 		contentPane.add(lblCardNumber);
 		
 		textField_Card_No = new JTextField();
-		textField_Card_No.setBounds(240, 24, 80, 14);
+		textField_Card_No.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		textField_Card_No.setBounds(240, 24, 149, 14);
 		contentPane.add(textField_Card_No);
 		textField_Card_No.setColumns(10);
 		
 		textField_SSN = new JTextField();
+		textField_SSN.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		textField_SSN.setColumns(10);
-		textField_SSN.setBounds(389, 24, 80, 14);
+		textField_SSN.setBounds(501, 24, 149, 14);
 		contentPane.add(textField_SSN);
 		
 		JLabel lblOr = new JLabel("OR");
 		lblOr.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblOr.setHorizontalAlignment(SwingConstants.CENTER);
-		lblOr.setBounds(325, 24, 32, 14);
+		lblOr.setBounds(422, 24, 32, 14);
 		contentPane.add(lblOr);
 		
 		JButton btnSearch = new JButton("Search");
@@ -137,7 +139,7 @@ public class Check_Borrower extends JFrame {
 				
 			}
 		});
-		btnSearch.setBounds(490, 19, 98, 25);
+		btnSearch.setBounds(660, 19, 98, 25);
 		contentPane.add(btnSearch);
 		
 		JScrollPane scrollPane = new JScrollPane();
