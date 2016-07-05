@@ -73,7 +73,7 @@ public class Main_Window {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setForeground(SystemColor.desktop);
-		frame.setBounds(100, 100, 450, 315);
+		frame.setBounds(100, 100, 470, 315);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -81,7 +81,7 @@ public class Main_Window {
 		TopLeft.setFont(new Font("Tahoma", Font.BOLD, 13));
 		TopLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Add_Borrower bor = new Add_Borrower(frame);
+				Add_Borrower bor = new Add_Borrower(frame, conn);
 				frame.setVisible(false);
 				bor.setVisible(true);
 			}
@@ -92,7 +92,7 @@ public class Main_Window {
 		JButton BottomLeft = new JButton("Check Borrower");
 		BottomLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Check_Borrower bor = new Check_Borrower(frame);
+				Check_Borrower bor = new Check_Borrower(frame, conn);
 				frame.setVisible(false);
 				bor.setVisible(true);
 			}
@@ -112,7 +112,7 @@ public class Main_Window {
 				
 				if(Check_Branch(conn, stmt, Branch))
 						{
-						Search sea = new Search(frame, Branch);
+						Search sea = new Search(frame, conn, Branch);
 						frame.setVisible(false);
 						sea.setVisible(true);
 						}
@@ -121,7 +121,7 @@ public class Main_Window {
 				}
 				catch(Exception e1)
 				{
-					JOptionPane.showMessageDialog(null, e);
+					JOptionPane.showMessageDialog(null, e1);
 				}
 			}
 		});
@@ -129,12 +129,29 @@ public class Main_Window {
 		TopRight.setBounds(200, 112, 145, 58);
 		frame.getContentPane().add(TopRight);
 		
-		JButton BottomRight = new JButton("Check Out");
+		JButton BottomRight = new JButton("Check Out/In");
 		BottomRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Check_Out che = new Check_Out(frame);
-				frame.setVisible(false);
-				che.setVisible(true);
+				
+				try{
+					int Branch = Integer.parseInt(textField.getText());
+					
+					Statement stmt = conn.createStatement();
+					
+					if(Check_Branch(conn, stmt, Branch))
+							{
+						Check_Out che = new Check_Out(frame, conn, Branch);
+						frame.setVisible(false);
+						che.setVisible(true);
+							}
+					else
+						JOptionPane.showMessageDialog(null, "Branch: " + Branch + " does not exist. Possible Branches: " + Get_Branches(conn,stmt));
+					}
+					catch(Exception e1)
+					{
+						JOptionPane.showMessageDialog(null, e1);
+					}
+				
 			}
 		});
 		BottomRight.setFont(new Font("Tahoma", Font.BOLD, 13));

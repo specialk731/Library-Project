@@ -1,6 +1,7 @@
 package primary;
 
 import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,6 +13,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import java.sql.*;
+
 public class Search extends JFrame {
 
 	private JPanel contentPane;
@@ -21,7 +24,7 @@ public class Search extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Search(JFrame frame1, int branch) {
+	public Search(JFrame frame1, Connection conn, int branch) {
 		
 		Branch = branch;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
