@@ -168,7 +168,7 @@ public class Main_Window {
 		
 		JLabel lblConnectionStatus = new JLabel("Connection:");
 		lblConnectionStatus.setHorizontalAlignment(SwingConstants.CENTER);
-		lblConnectionStatus.setBounds(355, 181, 69, 14);
+		lblConnectionStatus.setBounds(344, 181, 89, 14);
 		frame.getContentPane().add(lblConnectionStatus);
 		
 	}

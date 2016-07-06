@@ -128,7 +128,7 @@ public class Search extends JFrame {
 		contentPane.add(chckbxAll);
 		
 		textField = new JTextField();
-		textField.setBounds(382, 14, 511, 21);
+		textField.setBounds(402, 14, 491, 21);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
@@ -174,7 +174,7 @@ public class Search extends JFrame {
 				
 				if(chckbxIsbn.isSelected() && chckbxAuthors.isSelected() && !chckbxTitle.isSelected())	// ISBN AND Author SEARCH
 					{
-						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE Name REGEXP '" + str + "' OR ISBN REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY Name;");
+						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE ISBN REGEXP '" + str + "' OR Name REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY ISBN;");
 
 						table.setModel(DbUtils.resultSetToTableModel(rs6));
 					}
@@ -198,7 +198,7 @@ public class Search extends JFrame {
 					}
 				else;
 
-				if(chckbxAll.isSelected())	//General SEARCH
+				if(chckbxAll.isSelected() || (chckbxIsbn.isSelected() && chckbxAuthors.isSelected() && chckbxTitle.isSelected()))	//General SEARCH
 				{
 					rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE Name REGEXP '" + str + "' OR ISBN REGEXP '" + str + "' OR Title REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY ISBN;");
 
@@ -256,6 +256,85 @@ public class Search extends JFrame {
 		contentPane.add(textField_Card_No);
 		
 		JButton btnCheckOut = new JButton("Check Out");
+		btnCheckOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try{
+				String CardNum = "";
+				String BookId = "";
+				Statement stmt = conn.createStatement();
+				ResultSet rs = null;
+				
+				CardNum = textField_Card_No.getText();
+				BookId = textField_Book_Id.getText();
+				
+				rs = stmt.executeQuery("SELECT * FROM BORROWER WHERE Card_No = " + CardNum + ";");
+				
+				if(!rs.next())
+					JOptionPane.showMessageDialog(null, "Card Number does not exist.");
+				else
+				{		
+					rs = stmt.executeQuery("SELECT Checked_Out FROM BOOK_COPIES WHERE Book_Id = " + BookId + ";");
+					
+					if(!rs.next() || rs.getBoolean("Checked_Out") == true)
+					{
+						JOptionPane.showMessageDialog(null, "Book ID is not valid.");
+					}
+					else
+					{
+						rs = stmt.executeQuery("SELECT COUNT(*) FROM BOOK_LOANS WHERE Card_No = " + CardNum + " AND Date_In IS NULL;");
+						
+						rs.next();
+						
+						if(rs.getInt("COUNT(*)") > 2)
+						{
+							JOptionPane.showMessageDialog(null, "Card Number has to many books checked out.");
+						}
+						else
+						{
+							rs = stmt.executeQuery("SELECT COUNT(*) FROM BOOK_LOANS WHERE Date_Due < CURDATE()");
+							
+							rs.next();
+							
+							if(rs.getInt("COUNT(*)") == 0)
+							{
+								rs = stmt.executeQuery("SELECT COUNT(*) FROM FINES JOIN BOOK_LOANS ON FINES.Loan_Id=BOOK_LOANS.Loan_Id AND Paid = FALSE AND Card_No = " + CardNum + ";");
+								
+								rs.next();
+								
+								if(rs.getInt("COUNT(*)") == 0)
+								{
+									stmt.executeUpdate("INSERT INTO BOOK_LOANS (Book_Id, Card_No, Date_Out, Date_Due) VALUES (" + BookId + ", " + CardNum + ", CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY));");
+									stmt.executeUpdate("UPDATE BOOK_COPIES SET Checked_Out = TRUE WHERE Book_Id = " + BookId + ";");
+									
+									rs = stmt.executeQuery("SELECT Loan_Id FROM BOOK_LOANS WHERE Book_Id = " + BookId + " AND Card_No = " + CardNum + " AND Date_In IS NULL;");
+									
+									rs.next();
+									
+									JOptionPane.showMessageDialog(null, "The Book Id: " + BookId + " is checked out to Card Number:" + CardNum + ". The Loan ID is " + rs.getString("Loan_Id"));
+								}
+								else
+								{
+									JOptionPane.showMessageDialog(null, "Card Number has an unpaid Fine.");
+								}
+							}
+							else
+								JOptionPane.showMessageDialog(null, "Card Number has an overdue book.");
+						}
+					}
+				}
+				
+					
+				
+				}
+				catch(Exception e7){
+					JOptionPane.showMessageDialog(null, e7);
+				}
+				
+				
+				
+			}
+		});
 		btnCheckOut.setBounds(261, 509, 115, 39);
 		contentPane.add(btnCheckOut);
 	}

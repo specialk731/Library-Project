@@ -34,6 +34,8 @@ public class Check_Borrower extends JFrame {
 	private JTable table_1;
 	JComboBox comboBox = new JComboBox();
 	private JTextField textField;
+	private JTable table_2;
+	private JTable table_3;
 
 
 	/**
@@ -113,9 +115,17 @@ public class Check_Borrower extends JFrame {
 					
 					if(textField_Card_No.getText().length() > 0)
 					{
-					rs3 = stmt.executeQuery("SELECT BOOK_LOANS.Loan_Id, BOOK_LOANS.Book_Id, BOOK_LOANS.Date_Out, BOOK_LOANS.Date_Due, BOOK_LOANS.Date_In FROM BOOK_LOANS JOIN BORROWER ON BOOK_LOANS.Card_No=BORROWER.Card_No WHERE BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"';");
+					rs3 = stmt.executeQuery("SELECT BOOK_LOANS.Loan_Id, BOOK_LOANS.Book_Id, BOOK_LOANS.Date_Out, BOOK_LOANS.Date_Due, BOOK_LOANS.Date_In FROM BOOK_LOANS JOIN BORROWER ON BOOK_LOANS.Card_No=BORROWER.Card_No WHERE (BOOK_LOANS.Date_Due >= CURDATE() OR BOOK_LOANS.Date_IN IS NOT NULL) AND BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"';");
 					
 					table.setModel(DbUtils.resultSetToTableModel(rs3));
+					
+					rs3 = stmt.executeQuery("SELECT BOOK_LOANS.Loan_Id, BOOK_LOANS.Book_Id, BOOK_LOANS.Date_Out, BOOK_LOANS.Date_Due, BOOK_LOANS.Date_In FROM BOOK_LOANS JOIN BORROWER ON BOOK_LOANS.Card_No=BORROWER.Card_No WHERE (BOOK_LOANS.Date_Due < CURDATE() AND BOOK_LOANS.Date_In IS NULL) AND BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"';");
+					
+					table_2.setModel(DbUtils.resultSetToTableModel(rs3));
+					
+					rs3 = stmt.executeQuery("SELECT BOOK_LOANS.Loan_Id, BOOK_LOANS.Book_Id, BOOK_LOANS.Date_Out, BOOK_LOANS.Date_Due, BOOK_LOANS.Date_In FROM BOOK_LOANS JOIN BORROWER ON BOOK_LOANS.Card_No=BORROWER.Card_No WHERE (BOOK_LOANS.Date_Due >= CURDATE() AND BOOK_LOANS.Date_IN IS NULL) AND BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"';");
+					
+					table_3.setModel(DbUtils.resultSetToTableModel(rs3));
 					
 					if(str == "Unpaid")
 						rs3 = stmt.executeQuery("SELECT FINES.Loan_Id, FINES.Fine_Amt, FINES.Paid FROM FINES JOIN BOOK_LOANS ON FINES.Loan_Id=BOOK_LOANS.Loan_Id WHERE BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"' AND FINES.Paid = FALSE;");
@@ -139,18 +149,18 @@ public class Check_Borrower extends JFrame {
 				
 			}
 		});
-		btnSearch.setBounds(660, 19, 98, 25);
+		btnSearch.setBounds(660, 19, 125, 25);
 		contentPane.add(btnSearch);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(325, 85, 792, 383);
+		scrollPane.setBounds(325, 85, 792, 188);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 85, 306, 383);
+		scrollPane_1.setBounds(10, 85, 306, 409);
 		contentPane.add(scrollPane_1);
 		
 		table_1 = new JTable();
@@ -212,5 +222,37 @@ public class Check_Borrower extends JFrame {
 		});
 		btnPay.setBounds(195, 503, 90, 30);
 		contentPane.add(btnPay);
+		
+		JLabel lblCurrentlyCheckedOut = new JLabel("Previously Checked Out");
+		lblCurrentlyCheckedOut.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCurrentlyCheckedOut.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblCurrentlyCheckedOut.setBounds(591, 55, 255, 25);
+		contentPane.add(lblCurrentlyCheckedOut);
+		
+		JLabel lblPastDue = new JLabel("Past Due");
+		lblPastDue.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPastDue.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblPastDue.setBounds(591, 277, 255, 25);
+		contentPane.add(lblPastDue);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(325, 301, 792, 80);
+		contentPane.add(scrollPane_2);
+		
+		table_2 = new JTable();
+		scrollPane_2.setViewportView(table_2);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(325, 414, 792, 80);
+		contentPane.add(scrollPane_3);
+		
+		table_3 = new JTable();
+		scrollPane_3.setViewportView(table_3);
+		
+		JLabel lblCurrentlyCheckedOut_1 = new JLabel("Currently Checked Out");
+		lblCurrentlyCheckedOut_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCurrentlyCheckedOut_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblCurrentlyCheckedOut_1.setBounds(591, 386, 255, 25);
+		contentPane.add(lblCurrentlyCheckedOut_1);
 	}
 }

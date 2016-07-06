@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 public class Check_Out extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField textField_BookId;
 
 	/**
 	 * Create the frame.
@@ -54,12 +54,19 @@ public class Check_Out extends JFrame {
 		lblNewLabel.setBounds(99, 18, 85, 14);
 		contentPane.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(152, 18, 79, 14);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		textField_BookId = new JTextField();
+		textField_BookId.setBounds(152, 18, 79, 14);
+		contentPane.add(textField_BookId);
+		textField_BookId.setColumns(10);
 		
 		JButton btnCheckIn = new JButton("Check In");
+		btnCheckIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				
+			}
+		});
 		btnCheckIn.setBounds(251, 11, 105, 27);
 		contentPane.add(btnCheckIn);
 	}
