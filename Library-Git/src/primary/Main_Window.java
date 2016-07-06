@@ -45,7 +45,7 @@ public class Main_Window {
 	public Main_Window() {
 		initialize();
 		try{
-			conn = DriverManager.getConnection("jdbc:mysql://10.10.10.124:3306/", "Kevin", "");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "");
 			
 			if(conn.isValid(0))
 			{
