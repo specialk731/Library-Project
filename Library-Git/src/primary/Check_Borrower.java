@@ -74,13 +74,13 @@ public class Check_Borrower extends JFrame {
 		contentPane.add(lblCardNumber);
 		
 		textField_Card_No = new JTextField();
-		textField_Card_No.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		textField_Card_No.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		textField_Card_No.setBounds(240, 24, 149, 14);
 		contentPane.add(textField_Card_No);
 		textField_Card_No.setColumns(10);
 		
 		textField_SSN = new JTextField();
-		textField_SSN.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		textField_SSN.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		textField_SSN.setColumns(10);
 		textField_SSN.setBounds(501, 24, 149, 14);
 		contentPane.add(textField_SSN);
