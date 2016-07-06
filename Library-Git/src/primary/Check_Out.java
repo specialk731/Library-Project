@@ -142,6 +142,7 @@ public class Check_Out extends JFrame {
 					}
 					
 					stmt.executeUpdate("UPDATE BOOK_LOANS SET Date_in = CURDATE() WHERE Book_Id = " + BookId + " AND Date_In IS NULL;");
+					stmt.executeUpdate("UPDATE BOOK_COPIES SET Checked_Out = FALSE WHERE Book_Id = " + BookId + ";");
 										
 				}
 				else
