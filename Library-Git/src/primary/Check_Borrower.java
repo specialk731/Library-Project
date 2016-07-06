@@ -124,7 +124,7 @@ public class Check_Borrower extends JFrame {
 					
 					if(textField_Card_No.getText().length() == 0)
 					{
-						rs3 = stmt.executeQuery("SELECT BOOK_LOANS.Card_No FROM BOOK_LOANS JOIN BORROWER ON BOOK_LOANS.Card_No=BORROWER.Card_No WHERE BORROWER.SSN LIKE '" + textField_SSN.getText() + "';");
+						rs3 = stmt.executeQuery("SELECT Card_No FROM BORROWER WHERE SSN LIKE '" + textField_SSN.getText() + "';");
 						if(rs3.next())
 							textField_Card_No.setText(rs3.getString("Card_No"));
 					}					
