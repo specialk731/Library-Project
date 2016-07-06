@@ -115,7 +115,7 @@ public class Check_Borrower extends JFrame {
 					
 					if(textField_Card_No.getText().length() > 0)
 					{
-					rs3 = stmt.executeQuery("SELECT BOOK_LOANS.Loan_Id, BOOK_LOANS.Book_Id, BOOK_LOANS.Date_Out, BOOK_LOANS.Date_Due, BOOK_LOANS.Date_In FROM BOOK_LOANS JOIN BORROWER ON BOOK_LOANS.Card_No=BORROWER.Card_No WHERE (BOOK_LOANS.Date_Due >= CURDATE() OR BOOK_LOANS.Date_IN IS NOT NULL) AND BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"';");
+					rs3 = stmt.executeQuery("SELECT BOOK_LOANS.Loan_Id, BOOK_LOANS.Book_Id, BOOK_LOANS.Date_Out, BOOK_LOANS.Date_Due, BOOK_LOANS.Date_In FROM BOOK_LOANS JOIN BORROWER ON BOOK_LOANS.Card_No=BORROWER.Card_No WHERE BOOK_LOANS.Date_IN IS NOT NULL AND BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"';");
 					
 					table.setModel(DbUtils.resultSetToTableModel(rs3));
 					
