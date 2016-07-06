@@ -240,6 +240,8 @@ public class Check_Borrower extends JFrame {
 					JOptionPane.showMessageDialog(null, e4);
 				}
 				
+				btnSearch.doClick();
+				
 			}
 		});
 		btnPay.setBounds(195, 503, 90, 30);

@@ -88,6 +88,9 @@ public class Check_Out extends JFrame {
 					
 				String BookId = textField_BookId.getText();
 				
+				if(BookId.length() != 0)
+				{
+				
 				Statement stmt = conn.createStatement();
 				
 				rs = stmt.executeQuery("SELECT * FROM BOOK_LOANS WHERE Book_Id = " + BookId + " AND Date_In IS NULL");
@@ -134,17 +137,22 @@ public class Check_Out extends JFrame {
 					}
 					else
 					{
-						
+						JOptionPane.showMessageDialog(null, "Book Returned on time. No Fine.");
+						textField_BookId.setText("");
 					}
 					
 					stmt.executeUpdate("UPDATE BOOK_LOANS SET Date_in = CURDATE() WHERE Book_Id = " + BookId + " AND Date_In IS NULL;");
-					
-					JOptionPane.showMessageDialog(null, "Book Returned on time. No Fine.");
-					
+										
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null, "Book_Id Not Found.");
+					JOptionPane.showMessageDialog(null, "Book Id Not Found.");
+				}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Please Enter a Book Id");
+
 				}
 			}
 			catch(Exception e9)

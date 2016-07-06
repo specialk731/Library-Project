@@ -23,6 +23,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Search extends JFrame {
 
@@ -34,6 +36,7 @@ public class Search extends JFrame {
 	private JTable table;
 	private JTextField textField_Book_Id;
 	private JTextField textField_Card_No;
+	JButton btnSearch = new JButton("Search");
 
 	/**
 	 * Create the frame.
@@ -128,11 +131,17 @@ public class Search extends JFrame {
 		contentPane.add(chckbxAll);
 		
 		textField = new JTextField();
+		textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					btnSearch.doClick();
+			}
+		});
 		textField.setBounds(402, 14, 491, 21);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
-		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -292,7 +301,7 @@ public class Search extends JFrame {
 						}
 						else
 						{
-							rs = stmt.executeQuery("SELECT COUNT(*) FROM BOOK_LOANS WHERE Date_Due < CURDATE() AND Card_No = " + CardNum + ";");
+							rs = stmt.executeQuery("SELECT COUNT(*) FROM BOOK_LOANS WHERE Date_Due < CURDATE() AND Date_In IS NULL AND Card_No = " + CardNum + ";");
 							
 							rs.next();
 							
