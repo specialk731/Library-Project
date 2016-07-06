@@ -37,6 +37,7 @@ public class Search extends JFrame {
 	private JTextField textField_Book_Id;
 	private JTextField textField_Card_No;
 	JButton btnSearch = new JButton("Search");
+	JButton btnCheckOut = new JButton("Check Out");
 
 	/**
 	 * Create the frame.
@@ -157,15 +158,15 @@ public class Search extends JFrame {
 				
 				if(chckbxIsbn.isSelected() && !chckbxAuthors.isSelected() && !chckbxTitle.isSelected())	// ISBN SEARCH
 					{
-						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE ISBN REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY ISBN;");
+						rs6 = stmt.executeQuery("SELECT book_Id, isbn, title, author_names FROM GENERAL_SEARCH4 WHERE ISBN REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY ISBN;");
 						
-						table.setModel(DbUtils.resultSetToTableModel(rs6));						
+						table.setModel(DbUtils.resultSetToTableModel(rs6));	
 					}
 				else;
 				
 				if(!chckbxIsbn.isSelected() && chckbxAuthors.isSelected() && !chckbxTitle.isSelected())	// Authors SEARCH
 					{
-						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE Name REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY Name;");
+						rs6 = stmt.executeQuery("SELECT book_Id, isbn, title, author_names FROM GENERAL_SEARCH4 WHERE author_names REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY author_names;");
 
 						table.setModel(DbUtils.resultSetToTableModel(rs6));
 					}
@@ -174,7 +175,7 @@ public class Search extends JFrame {
 				
 				if(!chckbxIsbn.isSelected() && !chckbxAuthors.isSelected() && chckbxTitle.isSelected())	// Title SEARCH
 					{
-						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE Title REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY Title;");
+						rs6 = stmt.executeQuery("SELECT book_Id, isbn, title, author_names FROM GENERAL_SEARCH4 WHERE Title REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY Title;");
 
 						table.setModel(DbUtils.resultSetToTableModel(rs6));
 					}
@@ -183,36 +184,37 @@ public class Search extends JFrame {
 				
 				if(chckbxIsbn.isSelected() && chckbxAuthors.isSelected() && !chckbxTitle.isSelected())	// ISBN AND Author SEARCH
 					{
-						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE ISBN REGEXP '" + str + "' OR Name REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY ISBN;");
+						rs6 = stmt.executeQuery("SELECT book_Id, isbn, title, author_names FROM GENERAL_SEARCH4 WHERE (ISBN REGEXP '" + str + "' OR author_names REGEXP '" + str + "') AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY ISBN;");
 
 						table.setModel(DbUtils.resultSetToTableModel(rs6));
+						
 					}
 				else;
 
 				
 				if(chckbxIsbn.isSelected() && !chckbxAuthors.isSelected() && chckbxTitle.isSelected())	// ISBN AND Title SEARCH
 					{
-						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE ISBN REGEXP '" + str + "' OR Title REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY Title;");
+						rs6 = stmt.executeQuery("SELECT book_Id, isbn, title, author_names FROM GENERAL_SEARCH4 WHERE (ISBN REGEXP '" + str + "' OR Title REGEXP '" + str + "') AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY Title;");
 	
 						table.setModel(DbUtils.resultSetToTableModel(rs6));
 					}
-					else;
+				else;
 
 				
 				if(!chckbxIsbn.isSelected() && chckbxAuthors.isSelected() && chckbxTitle.isSelected())	// Authors AND Title SEARCH
 					{
-						rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE Name REGEXP '" + str + "' OR Title REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY Name;");
+						rs6 = stmt.executeQuery("SELECT book_Id, isbn, title, author_names FROM GENERAL_SEARCH4 WHERE (author_names REGEXP '" + str + "' OR Title REGEXP '" + str + "') AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY author_names;");
 	
 						table.setModel(DbUtils.resultSetToTableModel(rs6));
 					}
 				else;
 
 				if(chckbxAll.isSelected() || (chckbxIsbn.isSelected() && chckbxAuthors.isSelected() && chckbxTitle.isSelected()))	//General SEARCH
-				{
-					rs6 = stmt.executeQuery("SELECT Book_Id, ISBN, Title, Name FROM GENERAL_SEARCH2 WHERE Name REGEXP '" + str + "' OR ISBN REGEXP '" + str + "' OR Title REGEXP '" + str + "' AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY ISBN;");
-
-					table.setModel(DbUtils.resultSetToTableModel(rs6));
-				}
+					{
+						rs6 = stmt.executeQuery("SELECT book_Id, isbn, title, author_names FROM GENERAL_SEARCH4 WHERE (author_names REGEXP '" + str + "' OR ISBN REGEXP '" + str + "' OR Title REGEXP '" + str + "') AND Branch_Id = " + Branch +" AND Checked_Out = FALSE ORDER BY book_Id;");
+					//rs6 = stmt.executeQuery("select book_Id, isbn, title, author_names from GENERAL_SEARCH4 where (author_names like '%Thomas%' OR ISBN like '%green%') AND Branch_ID = " + Branch + " ORDER BY book_id;");
+						table.setModel(DbUtils.resultSetToTableModel(rs6));
+					}
 				else;
 				
 				if(!chckbxIsbn.isSelected() && !chckbxAuthors.isSelected() && !chckbxTitle.isSelected())	// NONE SEARCH
@@ -255,16 +257,29 @@ public class Search extends JFrame {
 		contentPane.add(lblCardNumber);
 		
 		textField_Book_Id = new JTextField();
+		textField_Book_Id.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+				btnCheckOut.doClick();
+			}
+		});
 		textField_Book_Id.setBounds(106, 509, 118, 14);
 		contentPane.add(textField_Book_Id);
 		textField_Book_Id.setColumns(10);
 		
 		textField_Card_No = new JTextField();
+		textField_Card_No.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					btnCheckOut.doClick();
+			}
+		});
 		textField_Card_No.setColumns(10);
 		textField_Card_No.setBounds(106, 534, 118, 14);
 		contentPane.add(textField_Card_No);
 		
-		JButton btnCheckOut = new JButton("Check Out");
 		btnCheckOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -321,6 +336,8 @@ public class Search extends JFrame {
 									rs.next();
 									
 									JOptionPane.showMessageDialog(null, "The Book Id: " + BookId + " is checked out to Card Number:" + CardNum + ". The Loan ID is " + rs.getString("Loan_Id"));
+									
+									btnSearch.doClick();
 								}
 								else
 								{

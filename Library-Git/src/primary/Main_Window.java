@@ -101,7 +101,7 @@ public class Main_Window {
 		BottomLeft.setBounds(45, 181, 145, 58);
 		frame.getContentPane().add(BottomLeft);
 		
-		JButton TopRight = new JButton("Search");
+		JButton TopRight = new JButton("Search Books");
 		TopRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -129,7 +129,7 @@ public class Main_Window {
 		TopRight.setBounds(200, 112, 145, 58);
 		frame.getContentPane().add(TopRight);
 		
-		JButton BottomRight = new JButton("Check In");
+		JButton BottomRight = new JButton("Search Borrows");
 		BottomRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

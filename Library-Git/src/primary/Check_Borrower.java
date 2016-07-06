@@ -22,6 +22,10 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.KeyAdapter;
@@ -40,6 +44,8 @@ public class Check_Borrower extends JFrame {
 	private JTable table_3;
 	JButton btnSearch = new JButton("Search");
 	JButton btnPay = new JButton("Pay");
+	private JTextField textField_BookId;
+	JButton btnCheckIn = new JButton("Check In");
 
 	/**
 	 * Create the frame.
@@ -68,14 +74,16 @@ public class Check_Borrower extends JFrame {
 		lblCheckBorrower.setBounds(10, 11, 125, 38);
 		contentPane.add(lblCheckBorrower);
 		
-		JLabel lblSsn = new JLabel("SSN");
+		JLabel lblSsn = new JLabel("SSN:");
+		lblSsn.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblSsn.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSsn.setBounds(464, 24, 32, 14);
+		lblSsn.setBounds(464, 11, 32, 27);
 		contentPane.add(lblSsn);
 		
-		JLabel lblCardNumber = new JLabel("Card Number");
+		JLabel lblCardNumber = new JLabel("Card Number:");
+		lblCardNumber.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblCardNumber.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCardNumber.setBounds(145, 24, 85, 14);
+		lblCardNumber.setBounds(145, 11, 85, 27);
 		contentPane.add(lblCardNumber);
 		
 		textField_Card_No = new JTextField();
@@ -86,8 +94,8 @@ public class Check_Borrower extends JFrame {
 					btnSearch.doClick();
 			}
 		});
-		textField_Card_No.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		textField_Card_No.setBounds(240, 24, 149, 14);
+		textField_Card_No.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		textField_Card_No.setBounds(240, 11, 149, 27);
 		contentPane.add(textField_Card_No);
 		textField_Card_No.setColumns(10);
 		
@@ -99,16 +107,17 @@ public class Check_Borrower extends JFrame {
 					btnSearch.doClick();
 			}
 		});
-		textField_SSN.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		textField_SSN.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		textField_SSN.setColumns(10);
-		textField_SSN.setBounds(501, 24, 149, 14);
+		textField_SSN.setBounds(501, 11, 149, 27);
 		contentPane.add(textField_SSN);
 		
 		JLabel lblOr = new JLabel("OR");
 		lblOr.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblOr.setHorizontalAlignment(SwingConstants.CENTER);
-		lblOr.setBounds(422, 24, 32, 14);
+		lblOr.setBounds(422, 11, 32, 27);
 		contentPane.add(lblOr);
+		btnSearch.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -121,13 +130,20 @@ public class Check_Borrower extends JFrame {
 				try{
 					Statement stmt = conn.createStatement();
 					ResultSet rs3;
+					String CardNo = textField_Card_No.getText();
 					
-					if(textField_Card_No.getText().length() == 0)
+					if(CardNo.length() == 0)
 					{
 						rs3 = stmt.executeQuery("SELECT Card_No FROM BORROWER WHERE SSN LIKE '" + textField_SSN.getText() + "';");
 						if(rs3.next())
 							textField_Card_No.setText(rs3.getString("Card_No"));
-					}					
+						CardNo = textField_Card_No.getText();
+					}
+					
+					rs3 = stmt.executeQuery("SELECT Card_No FROM BORROWER WHERE Card_No Like '" + CardNo + "';");
+					
+					if(rs3.next())
+					{
 					
 					if(textField_Card_No.getText().length() > 0)
 					{
@@ -154,6 +170,10 @@ public class Check_Borrower extends JFrame {
 					}
 					else
 						JOptionPane.showMessageDialog(null, "No matches for SSN given.");
+					}
+					else
+						JOptionPane.showMessageDialog(null, "No matches for Card_No given.");
+
 				}
 				catch(Exception e3)
 				{
@@ -165,7 +185,7 @@ public class Check_Borrower extends JFrame {
 				
 			}
 		});
-		btnSearch.setBounds(660, 19, 125, 25);
+		btnSearch.setBounds(660, 11, 125, 27);
 		contentPane.add(btnSearch);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -193,11 +213,13 @@ public class Check_Borrower extends JFrame {
 		contentPane.add(lblFines);
 		
 		JLabel lblPayLoanId = new JLabel("Pay Loan Id:");
+		lblPayLoanId.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblPayLoanId.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPayLoanId.setBounds(10, 505, 85, 28);
 		contentPane.add(lblPayLoanId);
 		
 		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		textField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -206,8 +228,9 @@ public class Check_Borrower extends JFrame {
 			}
 		});
 		textField.setColumns(10);
-		textField.setBounds(105, 505, 80, 28);
+		textField.setBounds(105, 505, 111, 28);
 		contentPane.add(textField);
+		btnPay.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		btnPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -244,7 +267,7 @@ public class Check_Borrower extends JFrame {
 				
 			}
 		});
-		btnPay.setBounds(195, 503, 90, 30);
+		btnPay.setBounds(231, 503, 85, 30);
 		contentPane.add(btnPay);
 		
 		JLabel lblCurrentlyCheckedOut = new JLabel("Previously Checked Out");
@@ -278,5 +301,112 @@ public class Check_Borrower extends JFrame {
 		lblCurrentlyCheckedOut_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblCurrentlyCheckedOut_1.setBounds(591, 386, 255, 25);
 		contentPane.add(lblCurrentlyCheckedOut_1);
+		
+		textField_BookId = new JTextField();
+		textField_BookId.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		textField_BookId.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					btnCheckIn.doClick();
+			}
+		});
+		textField_BookId.setBounds(549, 505, 214, 28);
+		contentPane.add(textField_BookId);
+		textField_BookId.setColumns(10);
+		btnCheckIn.setFont(new Font("Tahoma", Font.BOLD, 13));
+		
+		btnCheckIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try{
+					
+				ResultSet rs = null;
+					
+				String BookId = textField_BookId.getText();
+				
+				if(BookId.length() != 0)
+				{
+				
+				Statement stmt = conn.createStatement();
+				
+				rs = stmt.executeQuery("SELECT * FROM BOOK_LOANS WHERE Book_Id = " + BookId + " AND Date_In IS NULL");
+				
+				if(rs.next())
+				{
+					
+					Date Due_Date, Date_In;
+					
+					long Diff = 0;
+					
+					double Fine = 0.00;
+					
+					Due_Date = new Date(Calendar.getInstance().getTimeInMillis());
+					
+					Date_In = new Date(Calendar.getInstance().getTimeInMillis());
+					
+					rs = stmt.executeQuery("SELECT CURDATE();");
+					
+					rs.next();
+					
+					Date_In.setTime(rs.getDate("CURDATE()").getTime());
+					
+					rs = stmt.executeQuery("SELECT * FROM BOOK_LOANS WHERE Book_Id = " + BookId + " AND Date_In IS NULL;");
+					
+					rs.next();
+					
+					Due_Date.setTime(rs.getDate("Date_Due").getTime());
+					
+					if(Date_In.after(Due_Date))
+					{
+						Diff = Date_In.getTime() - Due_Date.getTime();
+						
+						Fine = .25 * TimeUnit.DAYS.convert(Diff, TimeUnit.MILLISECONDS); 
+						
+						DecimalFormat decimalFormat = new DecimalFormat("#.00");
+						
+						JOptionPane.showMessageDialog(null, TimeUnit.DAYS.convert(Diff, TimeUnit.MILLISECONDS) + " Days Late. Fine: $" + decimalFormat.format(Fine));
+						
+						rs.first();
+						
+						stmt.executeUpdate("INSERT INTO FINES VALUES('" + rs.getString("Loan_Id") + "', '" + Fine + "', FALSE);");
+											
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Book Returned on time. No Fine.");
+						textField_BookId.setText("");
+					}
+					
+					stmt.executeUpdate("UPDATE BOOK_LOANS SET Date_in = CURDATE() WHERE Book_Id = " + BookId + " AND Date_In IS NULL;");
+					stmt.executeUpdate("UPDATE BOOK_COPIES SET Checked_Out = FALSE WHERE Book_Id = " + BookId + ";");
+					btnSearch.doClick();
+										
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Book Id Not Found.");
+				}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Please Enter a Book Id");
+
+				}
+			}
+			catch(Exception e9)
+			{
+				JOptionPane.showMessageDialog(null, e9);
+			}
+		}
+	});
+		btnCheckIn.setBounds(783, 505, 100, 28);
+		contentPane.add(btnCheckIn);
+		
+		JLabel lblCheckInBook = new JLabel("Check in Book Id:");
+		lblCheckInBook.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblCheckInBook.setBounds(414, 512, 125, 14);
+		contentPane.add(lblCheckInBook);
+
 	}
 }
