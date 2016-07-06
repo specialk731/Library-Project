@@ -24,6 +24,8 @@ import javax.swing.JScrollPane;
 import java.sql.*;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Check_Borrower extends JFrame {
 
@@ -36,7 +38,8 @@ public class Check_Borrower extends JFrame {
 	private JTextField textField;
 	private JTable table_2;
 	private JTable table_3;
-
+	JButton btnSearch = new JButton("Search");
+	JButton btnPay = new JButton("Pay");
 
 	/**
 	 * Create the frame.
@@ -76,12 +79,26 @@ public class Check_Borrower extends JFrame {
 		contentPane.add(lblCardNumber);
 		
 		textField_Card_No = new JTextField();
+		textField_Card_No.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					btnSearch.doClick();
+			}
+		});
 		textField_Card_No.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		textField_Card_No.setBounds(240, 24, 149, 14);
 		contentPane.add(textField_Card_No);
 		textField_Card_No.setColumns(10);
 		
 		textField_SSN = new JTextField();
+		textField_SSN.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					btnSearch.doClick();
+			}
+		});
 		textField_SSN.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		textField_SSN.setColumns(10);
 		textField_SSN.setBounds(501, 24, 149, 14);
@@ -93,7 +110,6 @@ public class Check_Borrower extends JFrame {
 		lblOr.setBounds(422, 24, 32, 14);
 		contentPane.add(lblOr);
 		
-		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -127,9 +143,9 @@ public class Check_Borrower extends JFrame {
 					
 					table_3.setModel(DbUtils.resultSetToTableModel(rs3));
 					
-					if(str == "Unpaid")
+					if(str.equals("Unpaid"))
 						rs3 = stmt.executeQuery("SELECT FINES.Loan_Id, FINES.Fine_Amt, FINES.Paid FROM FINES JOIN BOOK_LOANS ON FINES.Loan_Id=BOOK_LOANS.Loan_Id WHERE BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"' AND FINES.Paid = FALSE;");
-					else if (str == "Paid")
+					else if (str.equals("Paid"))
 						rs3 = stmt.executeQuery("SELECT FINES.Loan_Id, FINES.Fine_Amt, FINES.Paid FROM FINES JOIN BOOK_LOANS ON FINES.Loan_Id=BOOK_LOANS.Loan_Id WHERE BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"' AND FINES.Paid = TRUE;");
 					else
 						rs3 = stmt.executeQuery("SELECT FINES.Loan_Id, FINES.Fine_Amt, FINES.Paid FROM FINES JOIN BOOK_LOANS ON FINES.Loan_Id=BOOK_LOANS.Loan_Id WHERE BOOK_LOANS.Card_No LIKE '" + textField_Card_No.getText() +"';");
@@ -182,11 +198,17 @@ public class Check_Borrower extends JFrame {
 		contentPane.add(lblPayLoanId);
 		
 		textField = new JTextField();
+		textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					btnPay.doClick();
+			}
+		});
 		textField.setColumns(10);
 		textField.setBounds(105, 505, 80, 28);
 		contentPane.add(textField);
 		
-		JButton btnPay = new JButton("Pay");
 		btnPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

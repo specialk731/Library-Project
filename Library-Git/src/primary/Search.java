@@ -292,7 +292,7 @@ public class Search extends JFrame {
 						}
 						else
 						{
-							rs = stmt.executeQuery("SELECT COUNT(*) FROM BOOK_LOANS WHERE Date_Due < CURDATE()");
+							rs = stmt.executeQuery("SELECT COUNT(*) FROM BOOK_LOANS WHERE Date_Due < CURDATE() AND Card_No = " + CardNum + ";");
 							
 							rs.next();
 							
